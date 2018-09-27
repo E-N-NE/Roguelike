@@ -1,14 +1,13 @@
 from basic_functions import BasicFunctions
+from constants import Constants
 
 d = BasicFunctions.d
 
 
 class PersonInteractions:
 
-    def __init__(self, messenger, *constants):
+    def __init__(self, messenger):
         self.messenger = messenger
-        self.EVASION_THRESHOLD = constants
-        self.ATTACK_FLAVOURS = {'hit': ['']}
 
     @staticmethod
     def evasion_damage(en_a, en_d, attack_type):
@@ -25,7 +24,7 @@ class PersonInteractions:
     # What happens when en_a attacks en_d.
     def attack(self, en_a, en_d, attack_type):
         evasion, damage = self.evasion_damage(en_a, en_d, attack_type)
-        if evasion >= self.EVASION_THRESHOLD:
+        if evasion >= Constants.EVASION_THRESHOLD:
             self.dodge_confirms(en_a, en_d, damage, attack_type)
         elif damage <= 0:
             self.block_confirms(en_a, en_d, damage, attack_type)
@@ -54,7 +53,7 @@ class PersonInteractions:
         elif flavour == 'sp':
             en_d.sp -= amount
         elif flavour == 'stun':
-            en_d.status['stun'] += 1
+            en_d.status['stun'] += amount
         elif flavour == 'mp':
             en_d.mp -= amount
 
@@ -66,8 +65,7 @@ class PersonInteractions:
     def special_effects(self, en_a, en_d, damage, attack_type):
         if 'vampirism' in en_a.doping:
             en_a.heal(damage)
-            self.add_feed("{} drains {}.".format(en_a.name,
-                                                              en_d.name))
+            self.add_feed("{} drains {}.".format(en_a.name, en_d.name))
             if attack_type == 'bite' and 'kai' not in en_d.doping:
                 en_d.base_doping += ['kai', 'vampirism']
         if en_a.status['viper']:
@@ -85,32 +83,21 @@ class PersonInteractions:
         self.add_feed("{} dodges {}'s {}.".format(en_d.name,
                                                   en_a.name,
                                                   attack_type))
-        if 'pride' in en_a.doping:
-            en_a.hp -= 111  # Maybe change?
-            self.add_feed += ["{}'s pride hurts!".format(en_a.name)]
 
     # Messages and calculations in the case en_d dodges.
     def block_confirms(self, en_a, en_d, damage, attack_type):
-        self.reduce(en_d,
-                    en_a.block_power(attack_type, damage),
-                    self.ATTACK_FLAVOURS[attack_type][2])
-        self.add_feed("{} blocks {}'s {}.".format(en_d.name,
-                                                  en_a.name,
+        self.reduce(en_d, en_a.block_power(attack_type, damage),
+                    Constants.ATTACK_FLAVOURS[attack_type][2])
+        self.add_feed("{} blocks {}'s {}.".format(en_d.name, en_a.name,
                                                   attack_type))
-        if 'pride' in en_a.doping:
-            en_a.hp -= 111  # Maybe change?
-            self.add_feed("{}'s pride hurts!".format(en_a.name))
 
     # Messages and calculations in the case en_a grazes.
     def graze_confirms(self, en_a, en_d, damage, attack_type):
-        self.reduce(en_d,
-                    damage,
-                    self.ATTACK_FLAVOURS[attack_type][0])
-        self.reduce(en_d,
-                    en_a.bonus_power(attack_type, damage),
-                    self.ATTACK_FLAVOURS[attack_type][1])
-        self.add_feed("{}'s {} grazes {}.".format(en_a.name,
-                                                  attack_type,
+        self.reduce(en_d, damage,
+                    Constants.ATTACK_FLAVOURS[attack_type][0])
+        self.reduce(en_d, en_a.bonus_power(attack_type, damage),
+                    Constants.ATTACK_FLAVOURS[attack_type][1])
+        self.add_feed("{}'s {} grazes {}.".format(en_a.name, attack_type,
                                                   en_d.name))
         self.special_effects(en_a, en_d, damage, attack_type)
 
@@ -118,10 +105,10 @@ class PersonInteractions:
     def hit_confirms(self, en_a, en_d, damage, attack_type):
         self.reduce(en_d,
                     damage,
-                    self.ATTACK_FLAVOURS[attack_type][0])
+                    Constants.ATTACK_FLAVOURS[attack_type][0])
         self.reduce(en_d,
                     en_a.bonus_power(attack_type, damage),
-                    self.ATTACK_FLAVOURS[attack_type][1])
+                    Constants.ATTACK_FLAVOURS[attack_type][1])
         self.add_feed("{} {} {}.".format(en_a.name,
                                          self.plural(attack_type),
                                          en_d.name))

@@ -11,28 +11,13 @@ class Constants:
     STR_UNNOMINATOR = 4
     EVASION_THRESHOLD = 4
 
+
     class AttackType:
 
         def __init__(self, **kwargs):
             for arg, value in kwargs.items():
                 setattr(self, arg, value)
 
-        # def __init__(self, name,
-        #              attack_flavour1, attack_flavour2, attack_flavour3,
-        #              offense_power, defense_power,
-        #              accuracy_power, dodge_power,
-        #              block_power, graze_power, hit_power):
-        #     self.name = name
-        #     self.attack_flavour1 = attack_flavour1
-        #     self.attack_flavour2 = attack_flavour2
-        #     self.attack_flavour3 = attack_flavour3
-        #     self.offense_power = offense_power
-        #     self.defense_power = defense_power
-        #     self.accuracy_power = accuracy_power
-        #     self.dodge_power = dodge_power
-        #     self.block_power = block_power
-        #     self.graze_power = graze_power
-        #     self.hit_power = hit_power
 
     ATTACK_HIT = AttackType(name='hit',
                             attack_flavour1='fp',
@@ -54,42 +39,33 @@ class Constants:
        lambda person, damage   : person.int + person.dex//2 + damage
                             )
 
-    ATTACK_FLAVOURS = {
-                       'hit'   : ('hp', 'bp', 'fp'),
-                       'poke'  : ('hp','bp','fp'),
-                       'crush' : ('hp','stun','fp'),
-                       'hex'   : ('mp','fp','none')
-                       }
-    ATTACK_POWERS = {
-                     'hit'   : (lambda x: (x.str*x.wield.str_multiply
-                                + x.dex*x.wield.dex_multiply//2)//2,
-                                lambda x: (d(x.int + x.dex
-                                             - x.encumbrance())),
-                                )
-                     }
+    controls = {'move_up'         : b't',
+                'move_up_right'   : b'y',
+                'move_right'      : b'h',
+                'move_down_right' : b'n',
+                'move_down'       : b'b',
+                'move_down_left'  : b'v',
+                'move_left'       : b'f',
+                'move_up_left'    : b'r',
+                'get_item'        : b'g',
+                'drop_item'       : b'd',
+                'use_item'        : b'i',
+                'shout'           : b'u',
+                'inspect_tile'    : b'm',
+                'dual_wield'      : b' '}
+
+    icons = {'weapon'    : '!',
+             'potion'    : '?',
+             'food'      : '%',
+             'armor'     : '[',
+             'shield'    : ']',
+             'accessory' : '"',
+             'wall'      : '#',
+             'door'      : '+',
+             'unknown'   : ',',
+             'nothing'   : '.'}
+
     # Those three return new instance of a class by template.
     @staticmethod
     def NULL_WEAPON():
         return Weapon('''Something''')
-
-
-class Icons:
-
-    def __init__(self):
-        pass
-
-    WEAPON_ICON = '!'
-    POTION_ICON = '?'
-    FOOD_ICON = '%'
-    ARMOR_ICON = '['
-    SHIELD_ICON = ']'
-    ACCESSORY_ICON = '"'
-    WALL_ICON = '#'
-    DOOR_ICON = '+'
-
-
-class StageInfo:
-
-    def __init__(self, map):
-        self.map = map
-

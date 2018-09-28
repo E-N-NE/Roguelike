@@ -1,5 +1,5 @@
 from basic_functions import BasicFunctions
-from constants import Constants, Icons
+from constants import Constants
 
 d = BasicFunctions.d
 
@@ -16,7 +16,7 @@ class Potion(Entity):
 
     def __init__(self, icon, name, number, x=None, y=None):
         self.number = number
-        Entity.__init__(self, icon, name, x, y)
+        Entity.__init__(self, , name, x, y)
 
 
 class Weapon(Entity):

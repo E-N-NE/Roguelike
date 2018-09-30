@@ -3,6 +3,7 @@ from constants import Constants
 
 d = BasicFunctions.d
 
+
 class Person:
 
     def __init__(self, icon, name,
@@ -12,7 +13,7 @@ class Person:
         self.icon = icon
         self.name = name
         self.hp = hp
-        self.VIT = hp
+        self.vit = hp
         self.fp = 0
         self.bp = 0
         self.aware = 0
@@ -26,8 +27,9 @@ class Person:
         self.wield = Constants.NULL_WEAPON
         self.shield = Constants.NULL_SHIELD
         self.wear = Constants.NULL_ARMOR
+        self.mp = self.max_mp
         self.dual_wield = 0
-        self.status = Constants.STATUS_TEMPLATE.copy()
+        self.status = Constants.STATUS_TEMPLATE
         self.x = x
         self.y = y
 
@@ -44,13 +46,10 @@ class Person:
                // (Constants.STR_UNNOMINATOR + self.str)
 
     @property
-    def hand_ac(self):
-        return (self.wield.ac + self.shield.ac * self.dual_wield)\
-               * (not self.status['stun'])
-
-    @property
     def ac(self):
-        return self.base_ac + self.wear.ac + self.hand_ac
+        return self.base_ac + self.wear.ac\
+               + (self.wield.ac + self.shield.ac * self.dual_wield)\
+               * (not self.status['stun'])
 
     @property
     def er(self):
@@ -80,4 +79,15 @@ class Person:
         return self.int * self.wield.int_multiply
 
     def heal(self, amount):
-        self.hp = min(self.hp+amount, self.VIT)
+        self.hp = min(self.hp+amount, self.vit)
+
+    def meal(self, amount):
+        self.mp = min(self.mp+amount, self.max_mp)
+
+
+class Mob(Person):
+
+    def __init__(self, icon, name, profession,
+                 hp, str, dex, int,
+                 base_ac, base_er, base_mr, base_doping,
+                 x, y):

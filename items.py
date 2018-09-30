@@ -14,7 +14,7 @@ class Potion(Item):
     def __init__(self, name,
                  number, location=(0, 0)):
         self.number = number
-        super().__init__(self, Constants.ICONS['potion'], name, location)
+        super().__init__(Constants.ICONS['potion'], name, location)
 
 
 class Weapon(Item):
@@ -22,7 +22,7 @@ class Weapon(Item):
     def __init__(self, name, type,
                  str_multiply, dex_multiply, int_multiply,
                  ac, er, mr,
-                 dual=1, doping=[], location=(0, 0)):
+                 dual=1, doping=(), location=(0, 0)):
         self.type = type
         self.str_multiply = str_multiply
         self.dex_multiply = dex_multiply
@@ -32,19 +32,19 @@ class Weapon(Item):
         self.mr = mr
         self.dual = dual
         self.doping = doping
-        super().__init__(self, Constants.ICONS['weapon'], name, location)
+        super().__init__(Constants.ICONS['weapon'], name, location)
 
 
 class Armor(Item):
 
     def __init__(self, name,
                  ac, er, mr,
-                 doping=[], location=(0, 0)):
+                 doping=(), location=(0, 0)):
         self.ac = ac
         self.er = er
         self.mr = mr
         self.doping = doping
-        super().__init__(self, Constants.ICONS['armor'], name, location)
+        super().__init__(Constants.ICONS['armor'], name, location)
 
 
 class Food(Item):
@@ -53,4 +53,4 @@ class Food(Item):
                  nutrition, side_effects=None, location=(0, 0)):
         self.nutrition = nutrition
         self.side_effects = side_effects
-        super().__init__(self, Constants.ICONS['food'], name, location)
+        super().__init__(Constants.ICONS['food'], name, location)

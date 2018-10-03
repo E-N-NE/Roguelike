@@ -1,7 +1,5 @@
-from basic_functions import BasicFunctions
+from basic_functions import d
 from items import Weapon, Armor
-
-d = BasicFunctions.d
 
 
 class Constants:
@@ -51,7 +49,7 @@ class Constants:
                             dodge_power=
         lambda person: d(person.int+person.dex-person.encumbrance),
                             block_power=
-        lambda person, damage:  (max(0, person.str + min(0, damage)), 'fp'),
+        lambda person, damage: (max(0, person.str + min(0, damage)), 'fp'),
                             graze_power=
         lambda person, damage: (damage, 'hp'),
                             hit_power=
@@ -124,16 +122,22 @@ class Constants:
             lambda person: person.dex*2 + (person.str+person.int)//2,
                                    int_modifier=
             lambda person: person.int + person.dex//3,
-                                   hp_modifier=
-            lambda person: person.hp + person.dex,
+                                   vit_modifier=
+            lambda person: person.vit + person.dex,
                                    base_ac_modifier=
             lambda person: person.base_ac,
                                    base_er_modifier=
             lambda person: person.base_er,
                                    base_mr_modifier=
             lambda person: person.base_mr,
-                                   base_doping=
-            lambda person: person.base_doping
+                                   base_doping_modifier=
+            lambda person: person.base_doping,
+                                   sight_modifier=
+            lambda person: person.sight + 1,
+                                   hear_modifier=
+            lambda person: person.hear,
+                                   shout_modifier=
+            lambda person: person.shout
                                    )
 
     PROFESSION_BRUTE = Profession(name='Brute',
@@ -145,37 +149,22 @@ class Constants:
             lambda person: person.dex + person.str//3,
                                   int_modifier=
             lambda person: person.int + person.str//3,
-                                  hp_modifier=
-            lambda person: person.hp + person.str,
+                                  vit_modifier=
+            lambda person: person.vit + person.str,
                                   base_ac_modifier=
             lambda person: person.base_ac,
                                   base_er_modifier=
             lambda person: person.base_er,
                                   base_mr_modifier=
             lambda person: person.base_mr,
-                                  base_doping=
-            lambda person: person.base_doping
-                                  )
-
-    PROFESSION_ = Profession(name='Brute',
-                                  preferred_weapons=
-                                  ('Bow', 'Polearm', 'Short Blade'),
-                                  str_modifier=
-                                  lambda person: person.str * 2 + (person.dex + person.int) // 2,
-                                  dex_modifier=
-                                  lambda person: person.dex + person.str // 3,
-                                  int_modifier=
-                                  lambda person: person.int + person.str // 3,
-                                  hp_modifier=
-                                  lambda person: person.hp + person.str,
-                                  base_ac_modifier=
-                                  lambda person: person.base_ac,
-                                  base_er_modifier=
-                                  lambda person: person.base_er,
-                                  base_mr_modifier=
-                                  lambda person: person.base_mr,
-                                  base_doping=
-                                  lambda person: person.base_doping
+                                  base_doping_modifier=
+            lambda person: person.base_doping,
+                                  sight_modifier=
+            lambda person: person.sight,
+                                  hear_modifier=
+            lambda person: person.hear,
+                                  shout_modifier=
+            lambda person: person.shout + 1
                                   )
 
 ##############################################################################
@@ -195,16 +184,20 @@ class Constants:
                 'inspect_tile'    : b'm',
                 'dual_wield'      : b' '}
 
-    ICONS = {'weapon'    : '!',
-             'potion'    : '?',
-             'food'      : '%',
-             'armor'     : '[',
-             'shield'    : ']',
-             'accessory' : '"',
-             'wall'      : '#',
-             'door'      : '+',
-             'unknown'   : ',',
-             'nothing'   : '.'}
+    ICONS = {'weapon'      : '!',
+             'potion'      : '?',
+             'food'        : '%',
+             'armor'       : '[',
+             'shield'      : ']',
+             'accessory'   : '"',
+             'wall'        : '#',
+             'door'        : '+',
+             'door open'   : '-',
+             'unknown'     : ',',
+             'nothing'     : '.',
+             'stairs up'   : '<',
+             'stairs down' : '>',
+             'void'        : '~'}
 
     @classproperty
     def STATUS_TEMPLATE(cls):

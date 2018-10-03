@@ -70,6 +70,6 @@ class Messenger:
 
     def print_everything(self):
         print_stats = self.stats(self.player)
-        printer = self.split_pane(2,self.player.ROS*2+1,
-                                  [self.mapper.map(self.player.ROS),
+        printer = self.split_pane(2,self.player.ros*2+1,
+                                  [self.mapper.map(self.player.ros),
                                    print_stats])

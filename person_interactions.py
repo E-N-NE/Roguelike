@@ -1,7 +1,5 @@
-from basic_functions import BasicFunctions
+from basic_functions import d
 from constants import Constants
-
-d = BasicFunctions.d
 
 
 class PersonInteractions:

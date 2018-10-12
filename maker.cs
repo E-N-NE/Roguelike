@@ -1,4 +1,3 @@
-
 public class Condition
 {
   public int Maximum { get; set; }
@@ -92,24 +91,20 @@ public class MapHandler
 		for(int condition=0;
         condition < MapRuleSet.Rules[RulePointer].ConditionCount; condition++)
     {
-      using (var currentCondition =
-             MapRuleSet.Rules[RulePointer].Conditions[condition]);
+      if(MapRuleSet.Rules[RulePointer].Conditions[condition].Minimum <=
+         GetAdjacentThings(x,y,
+                           MapRuleSet.Rules[RulePointer].Conditions[condition].SizeX,MapRuleSet.Rules[RulePointer].Conditions[condition].SizeY,
+                           MapRuleSet.Rules[RulePointer].Conditions[condition].GetTile,
+                           MapRuleSet.Rules[RulePointer].Conditions[condition].Default)
+         <= MapRuleSet.Rules[RulePointer].Conditions[condition].Maximum)
       {
-        if(currentCondition.Minimum <=
-           GetAdjacentThings(x,y,
-                             currentCondition.SizeX,currentCondition.SizeY,
-                             currentCondition.GetTile,
-                             currentCondition.Default)
-           <= currentCondition.Maximum)
-        {
-          if(currentCondition.SetTile == -1)
-            return Map[x,y];
-          else
-            return currentCondition.SetTile;
-        }
+        if(MapRuleSet.Rules[RulePointer].Conditions[condition].SetTile == -1)
+          return Map[x,y];
         else
-          continue;
+          return MapRuleSet.Rules[RulePointer].Conditions[condition].SetTile;
       }
+      else
+        continue;
     }
     return Map[x,y];
 	}
@@ -260,11 +255,11 @@ public class MapHandler
 
   public void Main()
   {
-    CONDITION_5 = Condition(5,5,1,1,1,1,1);
-    CONDITION_LONELY = Condition(0,2,2,2,1,1,1);
-    RULE_5 = Rule(1,new Condition{CONDITION_5});
-    RULE_COMPLEXITY = Rule(2,new {CONDITION_5,CONDITION_LONELY});
-    RULESET_STANDARD = RuleSet(5,new {RULE_5,RULE_5,RULE_5,RULE_5,RULE_COMPLEXITY});
+    Condition CONDITION_5 = Condition(5,5,1,1,1,1,1);
+    Condition CONDITION_LONELY = Condition(0,2,2,2,1,1,1);
+    Rule RULE_5 = Rule(1,new Condition{CONDITION_5});
+    Rule RULE_COMPLEXITY = Rule(2,new {CONDITION_5,CONDITION_LONELY});
+    Ruleset RULESET_STANDARD = RuleSet(5,new {RULE_5,RULE_5,RULE_5,RULE_5,RULE_COMPLEXITY});
     MapHandler myMap = MapHandler(40,40,40,RULESET_STANDARD);
   }
 }

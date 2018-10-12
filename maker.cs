@@ -257,6 +257,8 @@ public class MapHandler
 		return 0;
 	}
 
+
+
   public void Main()
   {
     Condition CONDITION_5 = new Condition(5,5,1,1,1,1,true);

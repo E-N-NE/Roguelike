@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 public class Condition
 {
   public int Maximum { get; set; }
@@ -6,9 +9,9 @@ public class Condition
   public int SizeY { get; set; }
   public int GetTile  { get; set; }
   public int SetTile  { get; set; }
-  public int Default  { get; set; }
+  public bool Default  { get; set; }
 
-  public Condition(int mx, int mn, int sx, int sy, int gttr, int sttr, int df)
+  public Condition(int mx, int mn, int sx, int sy, int gttr, int sttr, bool df)
   {
     this.Maximum = mx;
     this.Minimum = mn;
@@ -88,20 +91,20 @@ public class MapHandler
 
 	public int PlaceThingLogic(int x,int y)
 	{
-		for(int condition=0;
-        condition < MapRuleSet.Rules[RulePointer].ConditionCount; condition++)
+		for(int conditionPointer=0;
+        conditionPointer < MapRuleSet.Rules[RulePointer].ConditionCount; conditionPointer++)
     {
-      if(MapRuleSet.Rules[RulePointer].Conditions[condition].Minimum <=
-         GetAdjacentThings(x,y,
-                           MapRuleSet.Rules[RulePointer].Conditions[condition].SizeX,MapRuleSet.Rules[RulePointer].Conditions[condition].SizeY,
-                           MapRuleSet.Rules[RulePointer].Conditions[condition].GetTile,
-                           MapRuleSet.Rules[RulePointer].Conditions[condition].Default)
-         <= MapRuleSet.Rules[RulePointer].Conditions[condition].Maximum)
+      var thingsAround = GetAdjacentThings(x,y,
+                        MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].SizeX,MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].SizeY,
+                        MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].GetTile,
+                        MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Default);
+      if(MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Minimum <= thingsAround &&
+         thingsAround <= MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Maximum)
       {
-        if(MapRuleSet.Rules[RulePointer].Conditions[condition].SetTile == -1)
+        if(MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].SetTile == -1)
           return Map[x,y];
         else
-          return MapRuleSet.Rules[RulePointer].Conditions[condition].SetTile;
+          return MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].SetTile;
       }
       else
         continue;
@@ -110,7 +113,7 @@ public class MapHandler
 	}
 
 	public int GetAdjacentThings(int x,int y,int scopeX,int scopeY,
-                               int thing, int Default)
+                               int thing, bool Default)
 	{
 		int startX = x - scopeX;
 		int startY = y - scopeY;
@@ -129,7 +132,7 @@ public class MapHandler
 		return thingCounter;
 	}
 
-	bool IsThing(int x,int y, int thing, int Default)
+	bool IsThing(int x,int y, int thing, bool Default)
 	{
 		// Consider out-of-bound a wall
 		if( IsOutOfBounds(x,y) )
@@ -175,6 +178,7 @@ public class MapHandler
 		                                  PercentAreWalls.ToString(),
 		                                  Environment.NewLine
 		                                 );
+
 
 		List<string> mapSymbols = new List<string>();
 		mapSymbols.Add(".");
@@ -255,11 +259,11 @@ public class MapHandler
 
   public void Main()
   {
-    Condition CONDITION_5 = Condition(5,5,1,1,1,1,1);
-    Condition CONDITION_LONELY = Condition(0,2,2,2,1,1,1);
-    Rule RULE_5 = Rule(1,new Condition{CONDITION_5});
-    Rule RULE_COMPLEXITY = Rule(2,new {CONDITION_5,CONDITION_LONELY});
-    Ruleset RULESET_STANDARD = RuleSet(5,new {RULE_5,RULE_5,RULE_5,RULE_5,RULE_COMPLEXITY});
+    Condition CONDITION_5 = new Condition(5,5,1,1,1,1,true);
+    Condition CONDITION_LONELY = new Condition(0,2,2,2,1,1,true);
+    Rule RULE_5 = new Rule(1,new Condition{CONDITION_5});
+    Rule RULE_COMPLEXITY = new Rule(2,new Condition{CONDITION_5,CONDITION_LONELY});
+    RuleSet RULESET_STANDARD = new RuleSet(5,new Rule{RULE_5,RULE_5,RULE_5,RULE_5,RULE_COMPLEXITY});
     MapHandler myMap = MapHandler(40,40,40,RULESET_STANDARD);
   }
 }

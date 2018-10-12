@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 public class Condition
 {
-  public int Maximum { get; set; }
   public int Minimum { get; set; }
+  public int Maximum { get; set; }
   public int SizeX { get; set; }
   public int SizeY { get; set; }
   public int GetTile  { get; set; }
   public int SetTile  { get; set; }
   public bool Default  { get; set; }
 
-  public Condition(int mx, int mn, int sx, int sy, int gttr, int sttr, bool df)
+  public Condition(int mn, int mx, int sx, int sy, int gttr, int sttr, bool df)
   {
-    this.Maximum = mx;
     this.Minimum = mn;
+    this.Maximum = mx;
     this.SizeX = sx;
     this.SizeY = sy;
     this.GetTile = gttr;
@@ -28,9 +28,9 @@ public class Rule
   public int ConditionCount  { get; set; }
   public Condition[] Conditions  { get; set; }
 
-  public Rule(int cc, Condition[] cs)
+  public Rule(Condition[] cs)
   {
-    this.ConditionCount = cc;
+    this.ConditionCount = cs.Length;
     this.Conditions = cs;
   }
 }
@@ -40,9 +40,9 @@ public class RuleSet
   public int RuleCount  { get; set; }
   public Rule[] Rules  { get; set; }
 
-  public RuleSet(int rc, Rule[] rs)
+  public RuleSet(Rule[] rs)
   {
-    this.RuleCount = rc;
+    this.RuleCount = rs.Length;
     this.Rules = rs;
   }
 }
@@ -57,7 +57,6 @@ public class MapHandler
 	public int MapHeight		{ get; set; }
 	public int PercentAreWalls	{ get; set; }
   public RuleSet MapRuleSet  { get; set; }
-  public int RulePointer  { get; set; }
 
 	public MapHandler(int mw, int mh, int paw, RuleSet rs)
 	{
@@ -65,7 +64,6 @@ public class MapHandler
 		this.MapHeight = mh;
 		this.PercentAreWalls = paw;
     this.MapRuleSet = rs;
-    this.RulePointer = 0;
 		RandomFillMap();
     MakeAllCaverns();
     PrintMap();
@@ -73,23 +71,21 @@ public class MapHandler
 
   public void MakeAllCaverns()
   {
-    for(RulePointer=0; RulePointer < MapRuleSet.RuleCount; RulePointer++)
-      MakeCaverns();
+    int[,] NewMap = new int[MapWidth,MapHeight];
+    for(int RulePointer=0; RulePointer < MapRuleSet.RuleCount; RulePointer++)
+    {
+      for(int column=0, row=0; row <= MapHeight-1; row++)
+      {
+        for(column = 0; column <= MapWidth-1; column++)
+        {
+          NewMap[column,row] = PlaceThingLogic(column,row,RulePointer);
+        }
+      }
+      Map = NewMap;
+    }
   }
 
-	public void MakeCaverns()
-	{
-		// By initilizing column in the outter loop, its only created ONCE
-		for(int column=0, row=0; row <= MapHeight-1; row++)
-		{
-			for(column = 0; column <= MapWidth-1; column++)
-			{
-				Map[column,row] = PlaceThingLogic(column,row);
-			}
-		}
-	}
-
-	public int PlaceThingLogic(int x,int y)
+	public int PlaceThingLogic(int x,int y, int RulePointer)
 	{
 		for(int conditionPointer=0;
         conditionPointer < MapRuleSet.Rules[RulePointer].ConditionCount; conditionPointer++)
@@ -99,15 +95,13 @@ public class MapHandler
                         MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].GetTile,
                         MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Default);
       if(MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Minimum <= thingsAround &&
-         thingsAround <= MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Maximum)
+         MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].Maximum >= thingsAround)
       {
         if(MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].SetTile == -1)
           return Map[x,y];
         else
           return MapRuleSet.Rules[RulePointer].Conditions[conditionPointer].SetTile;
       }
-      else
-        continue;
     }
     return Map[x,y];
 	}
@@ -259,13 +253,15 @@ public class MapHandler
 
 
 
-  public void Main()
+  public static void Main()
   {
-    Condition CONDITION_5 = new Condition(5,5,1,1,1,1,true);
+    Condition CONDITION_5      = new Condition(5,9,1,1,1,1,true);
     Condition CONDITION_LONELY = new Condition(0,2,2,2,1,1,true);
-    Rule RULE_5 = new Rule(1,new Condition{CONDITION_5});
-    Rule RULE_COMPLEXITY = new Rule(2,new Condition{CONDITION_5,CONDITION_LONELY});
-    RuleSet RULESET_STANDARD = new RuleSet(5,new Rule{RULE_5,RULE_5,RULE_5,RULE_5,RULE_COMPLEXITY});
-    MapHandler myMap = MapHandler(40,40,40,RULESET_STANDARD);
+    Condition CONDITION_ELSE_0 = new Condition(0,1,0,0,0,0,false);
+    Rule RULE_5                 = new Rule(new Condition[]{CONDITION_5,CONDITION_ELSE_0});
+    Rule RULE_COMPLEXITY        = new Rule(new Condition[]{CONDITION_5,CONDITION_LONELY,CONDITION_ELSE_0});
+    Rule RULE_LONELY            = new Rule(new Condition[]{CONDITION_LONELY});
+    RuleSet RULESET_STANDARD     = new RuleSet(new Rule[]{RULE_5,RULE_5,RULE_5,RULE_5,RULE_5,RULE_LONELY});
+    MapHandler myMap              = new MapHandler(40,40,50,RULESET_STANDARD);
   }
 }

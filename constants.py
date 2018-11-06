@@ -169,36 +169,6 @@ class Constants:
 
 ##############################################################################
 
-    CONTROLS = {'move_up'         : b't',
-                'move_up_right'   : b'y',
-                'move_right'      : b'h',
-                'move_down_right' : b'n',
-                'move_down'       : b'b',
-                'move_down_left'  : b'v',
-                'move_left'       : b'f',
-                'move_up_left'    : b'r',
-                'get_item'        : b'g',
-                'drop_item'       : b'd',
-                'use_item'        : b'i',
-                'shout'           : b'u',
-                'inspect_tile'    : b'm',
-                'dual_wield'      : b' '}
-
-    ICONS = {'weapon'      : '!',
-             'potion'      : '?',
-             'food'        : '%',
-             'armor'       : '[',
-             'shield'      : ']',
-             'accessory'   : '"',
-             'wall'        : '#',
-             'door'        : '+',
-             'door open'   : '-',
-             'unknown'     : ',',
-             'nothing'     : '.',
-             'stairs up'   : '<',
-             'stairs down' : '>',
-             'void'        : '~'}
-
     @classproperty
     def STATUS_TEMPLATE(cls):
         return {'poison': 0, 'energy': 0, 'regeneration': 0,
@@ -216,3 +186,40 @@ class Constants:
     @classproperty
     def NULL_SHIELD(cls):
         return Weapon('''Something''')
+
+
+class Controls:
+
+    MOVE_UP         = b't'
+    MOVE_UP_RIGHT   = b'y'
+    MOVE_RIGHT      = b'h'
+    MOVE_DOWN_RIGHT = b'n'
+    MOVE_DOWN       = b'b'
+    MOVE_DOWN_LEFT  = b'v'
+    MOVE_LEFT       = b'f'
+    MOVE_UP_LEFT    = b'r'
+    GET_ITEM        = b'g'
+    DROP_ITEM       = b'd'
+    USE_ITEM        = b'i'
+    SHOUT           = b'u'
+    INSPECT_TILE    = b'm'
+    DUAL_WIELD      = b' '
+
+
+class Icons:
+
+    WEAPON        = '!'
+    POTION        = '?'
+    FOOD          = '%'
+    ARMOR         = '['
+    SHIELD        = ']'
+    ACCESSORY     = '"'
+    WALL          = '#'
+    DOOR_CLOSED   = '+'
+    DOOR_OPEN     = '-'
+    UNKNOWN       = ','
+    NOTHING       = '.'
+    STAIRS_UP     = '<'
+    STAIRS_DOWN   = '>'
+    WATER         = '~'
+    ABSOLUTE_WALL = '8'

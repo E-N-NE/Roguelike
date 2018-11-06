@@ -1,4 +1,3 @@
-from basic_functions import d
 from constants import Constants
 
 

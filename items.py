@@ -1,11 +1,12 @@
-from constants import Constants
+from constants import Icons
 
 
 class Item:
 
-    def __init__(self, icon, name, location=(0, 0)):
+    def __init__(self, icon, name, unique=True, location=(0, 0)):
         self.icon = icon
         self.name = name
+        self.unique = unique
         self.location = location
 
 
@@ -14,7 +15,7 @@ class Potion(Item):
     def __init__(self, name,
                  number, location=(0, 0)):
         self.number = number
-        super().__init__(Constants.ICONS['potion'], name, location)
+        super().__init__(Icons.POTION, name, False, location)
 
 
 class Weapon(Item):
@@ -32,7 +33,7 @@ class Weapon(Item):
         self.mr = mr
         self.dual = dual
         self.doping = doping
-        super().__init__(Constants.ICONS['weapon'], name, location)
+        super().__init__(Icons.WEAPON, name, True, location)
 
 
 class Armor(Item):
@@ -44,7 +45,7 @@ class Armor(Item):
         self.er = er
         self.mr = mr
         self.doping = doping
-        super().__init__(Constants.ICONS['armor'], name, location)
+        super().__init__(Icons.ARMOR, name, True, location)
 
 
 class Food(Item):
@@ -53,4 +54,4 @@ class Food(Item):
                  nutrition, side_effects=None, location=(0, 0)):
         self.nutrition = nutrition
         self.side_effects = side_effects
-        super().__init__(Constants.ICONS['food'], name, location)
+        super().__init__(Icons.FOOD, name, False, location)

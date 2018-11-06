@@ -1,4 +1,4 @@
-from constants import Constants
+from constants import Icons
 
 
 class Furniture:
@@ -14,7 +14,7 @@ class Furniture:
 class Wall(Furniture):
 
     def __init__(self, name, x, y):
-        super().__init__(Constants.ICONS['wall'], False,
+        super().__init__(Icons.WALL, False,
                          name, x, y)
 
 
@@ -22,7 +22,8 @@ class Stairs(Furniture):
 
     def __init__(self, name, connection, direction, x, y):
         self.connection = connection
-        super().__init__(Constants.ICONS['stairs {}'.format(direction)], True,
+        super().__init__(Icons.STAIRS_DOWN if direction == '>'
+                         else Icons.STAIRS_UP, True,
                          name, x, y)
 
 
@@ -34,11 +35,11 @@ class Door(Furniture):
 
     @property
     def icon(self):
-        return Constants.ICONS['door{}'.format(' open' * self.walkable)]
+        return Icons.DOOR_OPEN if self.walkable else Icons.DOOR_CLOSED
 
 
 class Water(Furniture):
 
     def __init__(self, name, x, y):
-        super().__init__(Constants.ICONS['void'], False,
+        super().__init__(Icons.WATER, False,
                          name, x, y)

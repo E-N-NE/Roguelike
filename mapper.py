@@ -1,4 +1,4 @@
-from constants import Constants
+from constants import Icons
 
 class Mapper:
 
@@ -8,13 +8,13 @@ class Mapper:
     @staticmethod
     def visual_icon(x, y, visibility):
         if visibility > 0:
-            return Constants.ICONS['unknown']
+            return Icons.UNKNOWN
         elif mob_is_at(x, y):
             return icon_of_mob_at(x, y)
         elif item_is_at(x, y):
             return icon_of_item_at(x, y)
         else:
-            return Constants.ICONS['nothing']
+            return Icons.NOTHING
 
     @staticmethod
     def draw_map(ROS, x, y):

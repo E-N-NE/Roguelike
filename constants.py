@@ -169,6 +169,7 @@ class Constants:
 
 ##############################################################################
 
+    # So they do not reference to the same object.
     @classproperty
     def STATUS_TEMPLATE(cls):
         return {'poison': 0, 'energy': 0, 'regeneration': 0,

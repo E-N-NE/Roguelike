@@ -80,7 +80,7 @@ class PersonInteractions:
         self.add_feed("{} dodges {}'s {}.".format(en_d.name, en_a.name,
                                                   attack_type.name))
 
-    # Messages and calculations in the case en_d dodges.
+    # Messages and calculations in the case en_d blocks.
     def block_confirms(self, en_a, en_d, damage, attack_type):
         self.reduce(en_d, *attack_type.block_power(en_a, damage))
         self.add_feed("{} blocks {}'s {}.".format(en_d.name, en_a.name,

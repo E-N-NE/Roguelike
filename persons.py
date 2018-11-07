@@ -51,23 +51,23 @@ class Person:
 
     @property
     def ac(self):
-        return self.base_ac + self.wear.ac\
+        return + self.base_ac + self.wear.ac\
                + (self.wield.ac + self.shield.ac * self.dual_wield)\
                * (not self.status['stun'])
 
     @property
     def er(self):
-        return self.base_er + self.wear.er\
+        return + self.base_er + self.wear.er\
                + self.wield.er + self.shield.er*self.dual_wield
 
     @property
     def mr(self):
-        return self.base_mr + self.wear.mr\
+        return + self.base_mr + self.wear.mr\
                + self.wield.mr + self.shield.mr*self.dual_wield
 
     @property
     def doping(self):
-        return self.wield.doping + self.shield.doping*(1-self.dual_wield)\
+        return + self.wield.doping + self.shield.doping*(1-self.dual_wield)\
                + self.wear.doping + self.base_doping
 
     @property

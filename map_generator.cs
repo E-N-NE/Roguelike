@@ -405,6 +405,6 @@ public class MapHandler
       RULESET = RULESET_HOR;
     else
       throw new ArgumentException("Invalid ruleset parameter.", "original");
-    MapHandler myMap         = new MapHandler(SIZE_X,SIZE_Y,WALL_PERCENT,RULESET_STANDARD);
+    MapHandler myMap         = new MapHandler(SIZE_X,SIZE_Y,WALL_PERCENT,RULESET);
   }
 }

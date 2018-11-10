@@ -7,7 +7,7 @@ class Mapper:
 
     @staticmethod
     def visual_icon(x, y, visibility):
-        if visibility > 0:
+        if visibility <= 0:
             return Icons.UNKNOWN
         elif mob_is_at(x, y):
             return icon_of_mob_at(x, y)

@@ -116,14 +116,14 @@ class Constants:
     PROFESSION_HUNTER = Profession(name='Hunter',
                                    preferred_weapons=
             ('Polearm', 'Short Blade', 'Bow'),
+                                   vit_modifier=
+            lambda person: person.vit + person.dex,
                                    str_modifier=
             lambda person: person.str + person.dex//3,
                                    dex_modifier=
             lambda person: person.dex*2 + (person.str+person.int)//2,
                                    int_modifier=
             lambda person: person.int + person.dex//3,
-                                   vit_modifier=
-            lambda person: person.vit + person.dex,
                                    base_ac_modifier=
             lambda person: person.base_ac,
                                    base_er_modifier=
@@ -143,14 +143,14 @@ class Constants:
     PROFESSION_BRUTE = Profession(name='Brute',
                                   preferred_weapons=
             ('Long Blade', 'Blunt', 'Polearm'),
+                                  vit_modifier=
+            lambda person: person.vit + person.str,
                                   str_modifier=
             lambda person: person.str*2 + (person.dex+person.int)//2,
                                   dex_modifier=
             lambda person: person.dex + person.str//3,
                                   int_modifier=
             lambda person: person.int + person.str//3,
-                                  vit_modifier=
-            lambda person: person.vit + person.str,
                                   base_ac_modifier=
             lambda person: person.base_ac,
                                   base_er_modifier=

@@ -30,3 +30,11 @@ def experience(xp, xp_floor, base=2):
         return 1
     else:
         return floor(log(xp // xp_floor, base)) + 1
+
+
+def multidimensional_list(*sizes):
+    if sizes:
+        return [multidimensional_list(*sizes[1:])
+                for i in range(sizes[0])]
+    else:
+        return []

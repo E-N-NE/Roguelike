@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public static class MyArrayExtensions
 {
@@ -83,32 +84,51 @@ public class RuleSet
 
 public class MapHandler
 {
-	System.Random rand = new System.Random();
+  System.Random rand = new System.Random();
 
-	public int[,] Map;
+  public int[,] Map;
 
-	public int MapWidth		{ get; set; }
-	public int MapHeight		{ get; set; }
-	public int PercentAreWalls	{ get; set; }
+  public int MapWidth    { get; set; }
+  public int MapHeight    { get; set; }
+  public int PercentAreWalls  { get; set; }
+  public int MinimalPlayZone  { get; set; }
   public RuleSet MapRuleSet  { get; set; }
   public List<int> MapClocky  { get; set; }
   public bool[,] PlayZone  { get; set; }
 
-	public MapHandler(int mw, int mh, int paw, RuleSet rs)
-	{
-		this.MapWidth = mw;
-		this.MapHeight = mh;
-		this.PercentAreWalls = paw;
+  public MapHandler(int mw, int mh, int paw, int mpz, RuleSet rs)
+  {
+    this.MapWidth = mw;
+    this.MapHeight = mh;
+    this.PercentAreWalls = paw;
+    this.MinimalPlayZone = mpz;
     this.MapRuleSet = rs;
     this.MapClocky = Clocky(1, 0);
-    this.PlayZone = new bool[MapWidth, MapHeight];
-    this.PlayZone.Populate2D(false);
-		RandomMap();
-    MakeAllCaverns();
-    Border();
-    FillOutFromRandom();
+    do
+    {
+      PlayZone = new bool[MapWidth, MapHeight];
+      PlayZone.Populate2D(false);
+      RandomMap();
+      MakeAllCaverns();
+      Border();
+      FillOutFromRandom();
+    } while(CalculatePlayZone() < this.MinimalPlayZone);
     PrintMap();
-	}
+  }
+
+  int CalculatePlayZone()
+  {
+    int returnee = 0;
+    for(int column, row = 0; row <= MapHeight-1; row++)
+    {
+      for(column = 0; column <= MapWidth-1; column++)
+      {
+        if(this.PlayZone[column,row])
+          returnee++;
+      }
+    }
+    return returnee;
+  }
 
   List<int> Clocky(int range, int disrange)
   {
@@ -143,9 +163,9 @@ public class MapHandler
     }
   }
 
-	int PlaceThingLogic(int x, int y, int RulePointer)
-	{
-		for(int conditionPointer=0;
+  int PlaceThingLogic(int x, int y, int RulePointer)
+  {
+    for(int conditionPointer=0;
         conditionPointer < MapRuleSet.Rules[RulePointer].ConditionCount;
         conditionPointer++)
     {
@@ -164,79 +184,79 @@ public class MapHandler
       }
     }
     return Map[x,y];
-	}
+  }
 
-	int GetAdjacentThings(int x,int y,int scopeX,int scopeY,
+  int GetAdjacentThings(int x,int y,int scopeX,int scopeY,
                                int thing, bool outsider)
-	{
-		int startX = x - scopeX;
-		int startY = y - scopeY;
-		int endX = x + scopeX;
-		int endY = y + scopeY;
+  {
+    int startX = x - scopeX;
+    int startY = y - scopeY;
+    int endX = x + scopeX;
+    int endY = y + scopeY;
 
-		int iX = startX;
-		int iY = startY;
+    int iX = startX;
+    int iY = startY;
 
-		int thingCounter = 0;
+    int thingCounter = 0;
 
-		for(iY = startY; iY <= endY; iY++)
-			for(iX = startX; iX <= endX; iX++)
-				if(IsThing(iX, iY, thing, outsider))
-					thingCounter += 1;
-		return thingCounter;
-	}
+    for(iY = startY; iY <= endY; iY++)
+      for(iX = startX; iX <= endX; iX++)
+        if(IsThing(iX, iY, thing, outsider))
+          thingCounter += 1;
+    return thingCounter;
+  }
 
-	bool IsThing(int x,int y, int thing, bool outsider)
-	{
-		// Consider out-of-bound a wall
-		if(IsOutOfBounds(x, y))
-		{
-			return outsider;
-		}
-
-		if(Map[x,y] == thing)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	bool IsOutOfBounds(int x, int y)
-	{
-		if( x < 0 || y < 0 )
-		{
-			return true;
-		}
-		else if( x > MapWidth-1 || y > MapHeight-1 )
-		{
-			return true;
-		}
-		return false;
-	}
-
-	void PrintMap()
-	{
-		Console.Clear();
-		Console.Write(MapToString());
-	}
-
-	string MapToString()
-	{
-		string returnString = "";
-
-		char[] mapSymbols = new char[4]{'.','#','~','8'};
-
-		for(int column = 0, row = 0; row < MapHeight; row++ )
+  bool IsThing(int x,int y, int thing, bool outsider)
+  {
+    // Consider out-of-bound a wall
+    if(IsOutOfBounds(x, y))
     {
-			for(column = 0; column < MapWidth; column++ )
-			{
-				returnString += mapSymbols[Map[column,row]];
-			}
-			returnString += Environment.NewLine;
-		}
-		return returnString;
-	}
+      return outsider;
+    }
+
+    if(Map[x,y] == thing)
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool IsOutOfBounds(int x, int y)
+  {
+    if( x < 0 || y < 0 )
+    {
+      return true;
+    }
+    else if( x > MapWidth-1 || y > MapHeight-1 )
+    {
+      return true;
+    }
+    return false;
+  }
+
+  void PrintMap()
+  {
+    Console.Clear();
+    Console.Write(MapToString());
+  }
+
+  string MapToString()
+  {
+    string returnString = "";
+
+    char[] mapSymbols = new char[4]{'.','#','~','8'};
+
+    for(int column = 0, row = 0; row < MapHeight; row++ )
+    {
+      for(column = 0; column < MapWidth; column++ )
+      {
+        returnString += mapSymbols[Map[column,row]];
+      }
+      returnString += Environment.NewLine;
+    }
+    return returnString;
+  }
 
   void FillOutFromRandom()
   {
@@ -289,79 +309,79 @@ public class MapHandler
     return newFront;
   }
 
-	void BlankMap()
-	{
-		for(int column, row = 0; row < MapHeight; row++)
+  void BlankMap()
+  {
+    for(int column, row = 0; row < MapHeight; row++)
     {
-			for(column = 0; column < MapWidth; column++)
+      for(column = 0; column < MapWidth; column++)
       {
-				Map[column,row] = 0;
-			}
-		}
-	}
+        Map[column,row] = 0;
+      }
+    }
+  }
 
   void Border()
   {
-		for(int column = 0,row = 0; row < MapHeight; row++)
+    for(int column = 0,row = 0; row < MapHeight; row++)
     {
-			for(column = 0; column < MapWidth; column++)
+      for(column = 0; column < MapWidth; column++)
       {
-				if(column == 0)
-				{
-					Map[column,row] = 3;
-				}
-				else if (row == 0)
-				{
-					Map[column,row] = 3;
-				}
-				else if (column == MapWidth-1)
-				{
-					Map[column,row] = 3;
-				}
-				else if (row == MapHeight-1)
-				{
-					Map[column,row] = 3;
+        if(column == 0)
+        {
+          Map[column,row] = 3;
         }
-			}
-		}
-	}
+        else if (row == 0)
+        {
+          Map[column,row] = 3;
+        }
+        else if (column == MapWidth-1)
+        {
+          Map[column,row] = 3;
+        }
+        else if (row == MapHeight-1)
+        {
+          Map[column,row] = 3;
+        }
+      }
+    }
+  }
 
-	void RandomMap()
-	{
-		Map = new int[MapWidth,MapHeight];
-		for(int column=0,row=0; row < MapHeight; row++)
+  void RandomMap()
+  {
+    Map = new int[MapWidth,MapHeight];
+    for(int column = 0,row = 0; row < MapHeight; row++)
     {
-			for(column = 0; column < MapWidth; column++)
-			{
-				// Creates a border
-				if(column == 0)
-				{
-					Map[column,row] = 1;
-				}
-				else if (row == 0)
-				{
-					Map[column,row] = 1;
-				}
-				else if (column == MapWidth-1)
-				{
-					Map[column,row] = 1;
-				}
-				else if (row == MapHeight-1)
-				{
-					Map[column,row] = 1;
-				}
-				else
-				{
-					Map[column,row] = (PercentAreWalls > RandomPercent()) ? 1 : 0;
-				}
-			}
-		}
-	}
+      for(column = 0; column < MapWidth; column++)
+      {
+        // Creates a border
+        if(column == 0)
+        {
+          Map[column,row] = 1;
+        }
+        else if (row == 0)
+        {
+          Map[column,row] = 1;
+        }
+        else if (column == MapWidth-1)
+        {
+          Map[column,row] = 1;
+        }
+        else if (row == MapHeight-1)
+        {
+          Map[column,row] = 1;
+        }
+        else
+        {
+          Map[column,row] = (PercentAreWalls > RandomPercent()) ? 1 : 0;
+        }
+      }
+    }
+  }
 
-	int RandomPercent()
-	{
-		return rand.Next(0,100);
-	}
+  int RandomPercent()
+  {
+    return rand.Next(0,100);
+  }
 
 
 
@@ -376,35 +396,54 @@ public class MapHandler
     Condition CONDITION_SPRINKLE   = new Condition(0,2,1,1,1,-1);
     Condition CONDITION_FRESH_AIR  = new Condition(0,0,2,2,0,-1,false);
     Condition CONDITION_LAKE       = new Condition(1,9,1,1,2,2,false,50);
-    Rule RULE_5                  = new Rule(new Condition[]{CONDITION_5,CONDITION_ABSOLUTE_0});
-    Rule RULE_VER                = new Rule(new Condition[]{CONDITION_VER,CONDITION_ABSOLUTE_0});
-    Rule RULE_HOR                = new Rule(new Condition[]{CONDITION_HOR,CONDITION_ABSOLUTE_0});
-    Rule RULE_COMPLEXITY         = new Rule(new Condition[]{CONDITION_5,CONDITION_LONELY,CONDITION_ABSOLUTE_0});
-    Rule RULE_FLOOD              = new Rule(new Condition[]{CONDITION_RAND_WATER});
-    Rule RULE_COMPLETENESS        = new Rule(new Condition[]{CONDITION_SPRINKLE,CONDITION_FRESH_AIR,CONDITION_LAKE});
-    RuleSet RULESET_STANDARD   = new RuleSet(new Rule[]{RULE_5,RULE_5,RULE_5,RULE_COMPLEXITY,RULE_5,RULE_FLOOD,RULE_COMPLETENESS,RULE_COMPLETENESS,RULE_COMPLETENESS});
-    RuleSet RULESET_ROUGH      = new RuleSet(new Rule[]{RULE_5,RULE_COMPLEXITY,RULE_5,RULE_FLOOD,RULE_COMPLETENESS,RULE_COMPLETENESS});
-    RuleSet RULESET_VER        = new RuleSet(new Rule[]{RULE_VER,RULE_VER,RULE_COMPLEXITY,RULE_VER});
-    RuleSet RULESET_HOR        = new RuleSet(new Rule[]{RULE_HOR,RULE_HOR,RULE_COMPLEXITY,RULE_HOR});
-    if (args.Length != 4)
-      throw new ArgumentException("Invalid number of parameters, must be 4.", "original");
+    Rule RULE_5                  = new Rule(new Condition[]{
+  CONDITION_5, CONDITION_ABSOLUTE_0});
+    Rule RULE_VER                = new Rule(new Condition[]{
+  CONDITION_VER, CONDITION_ABSOLUTE_0});
+    Rule RULE_HOR                = new Rule(new Condition[]{
+  CONDITION_HOR, CONDITION_ABSOLUTE_0});
+    Rule RULE_COMPLEXITY         = new Rule(new Condition[]{
+  CONDITION_5, CONDITION_LONELY, CONDITION_ABSOLUTE_0});
+    Rule RULE_FLOOD              = new Rule(new Condition[]{
+  CONDITION_RAND_WATER});
+    Rule RULE_COMPLETENESS       = new Rule(new Condition[]{
+  CONDITION_SPRINKLE, CONDITION_FRESH_AIR, CONDITION_LAKE});
+    RuleSet RULESET_STANDARD   = new RuleSet(new Rule[]{
+ RULE_5, RULE_5, RULE_5, RULE_COMPLEXITY, RULE_5, RULE_FLOOD,
+ RULE_COMPLETENESS, RULE_COMPLETENESS, RULE_COMPLETENESS});
+    RuleSet RULESET_ROUGH      = new RuleSet(new Rule[]{
+ RULE_5, RULE_COMPLEXITY, RULE_5, RULE_FLOOD,
+ RULE_COMPLETENESS, RULE_COMPLETENESS});
+    RuleSet RULESET_VER        = new RuleSet(new Rule[]{
+ RULE_VER, RULE_VER, RULE_COMPLEXITY, RULE_VER});
+    RuleSet RULESET_HOR        = new RuleSet(new Rule[]{
+ RULE_HOR, RULE_HOR, RULE_COMPLEXITY, RULE_HOR});
+
+    if (args.Length != 5)
+      throw new ArgumentException("Invalid number of parameters, must be 5.",
+       "original");
+
     int SIZE_X;
     int SIZE_Y;
     int WALL_PERCENT;
+    int MINIMAL_PLAY_ZONE;
     RuleSet RULESET;
     Int32.TryParse(args[0], out SIZE_X);
     Int32.TryParse(args[1], out SIZE_Y);
     Int32.TryParse(args[2], out WALL_PERCENT);
-    if (args[3] == "s")
+    Int32.TryParse(args[3], out MINIMAL_PLAY_ZONE);
+    if (args[4] == "s")
       RULESET = RULESET_STANDARD;
-    else if (args[3] == "r")
+    else if (args[4] == "r")
       RULESET = RULESET_ROUGH;
-    else if (args[3] == "v")
+    else if (args[4] == "v")
       RULESET = RULESET_VER;
-    else if (args[3] == "h")
+    else if (args[4] == "h")
       RULESET = RULESET_HOR;
     else
       throw new ArgumentException("Invalid ruleset parameter.", "original");
-    MapHandler myMap         = new MapHandler(SIZE_X,SIZE_Y,WALL_PERCENT,RULESET);
+    MapHandler myMap = new MapHandler(SIZE_X, SIZE_Y,
+                                      WALL_PERCENT, MINIMAL_PLAY_ZONE,
+                                      RULESET);
   }
 }

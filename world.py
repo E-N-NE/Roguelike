@@ -1,6 +1,6 @@
 # from basic_functions import d, r
 from basic_functions import multidimensional_list
-from constants import Icons
+from constants import Icons, Constants
 from furniture import Wall, Stairs, Door, Water
 
 from subprocess import Popen, PIPE, STDOUT
@@ -8,9 +8,12 @@ from subprocess import Popen, PIPE, STDOUT
 
 class World:
 
-    @classmethod
-    def create_new_stage(cls, connections, stage_info, generator):
-        return cls.Stage(connections, stage_info, generator)
+    def __init__(self, ):
+        self.stages = []
+        self.current_stage = 0
+
+    def create_new_stage(self, connections, stage_info):
+        self.stages.append(self.Stage(connections, stage_info))
 
     # class Pattern:
     #
@@ -80,18 +83,18 @@ class World:
         def __init__(self, width, height):
             self.list = multidimensional_list(width, height)
 
-            
-
     class StageInfo:
 
         def __init__(self, width, height, mob_info,
-                     partition_width=8, partition_height=8, type='s'):
+                     type=Constants.DEFAULT_MAP_TYPE,
+                     partition_width=Constants.DEFAULT_PARTITION_SIZE_X,
+                     partition_height=Constants.DEFAULT_PARTITION_SIZE_Y):
             self.width = width
             self.height = height
-            self.partition_width = partition_width
-            self.partition_height = partition_height
             self.mob_info = mob_info
             self.type = type
+            self.partition_width = partition_width
+            self.partition_height = partition_height
 
     class Stage:
 
@@ -107,10 +110,12 @@ class World:
                                               partition_count_width,
                                               self.
                                               partition_count_height)
+
             self.item_list = World.Partitioner(self.
                                                partition_count_width,
                                                self.
                                                partition_count_height)
+
             self.furniture_list = World.Partitioner(self.
                                                     partition_count_width,
                                                     self.
@@ -125,12 +130,20 @@ class World:
                     if line[x] == Icons.NOTHING:
                         pass
                     elif line[x] == Icons.WALL:
-                        self.furniture_list.append(Wall('Wall', x, y))
+                        self.append_furniture(Wall('Wall', x, y))
                     elif line[x] == Icons.DOOR_CLOSED:
-                        self.furniture_list.append(Door('Door', x, y))
+                        self.append_furniture(Door('Door', x, y))
                     elif line[x] == Icons.WATER:
-                        self.furniture_list.append(Water('Water', x, y))
+                        self.append_furniture(Water('Water', x, y))
 
         def append_mob(self, mob):
             self.mob_list.list[mob.x//self.partition_width]\
                               [mob.y//self.partition_height].append(mob)
+
+        def append_furniture(self, fur):
+            self.furniture_list.list[fur.x//self.partition_width]\
+                                    [fur.y//self.partition_height].append(fur)
+
+        def append_item(self, item):
+            self.item_list.list[item.x//self.partition_width]\
+                               [item.y//self.partition_height].append(item)

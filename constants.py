@@ -32,6 +32,12 @@ class Constants:
             func = classmethod(func)
         return cls.ClassPropertyGetter(func)
 
+##############################################################################
+
+    DEFAULT_PARTITION_SIZE_X = 10
+    DEFAULT_PARTITION_SIZE_Y = 10
+    DEFAULT_MAP_TYPE = 's'
+
     ER_UNNOMINATOR = 2
     STR_UNNOMINATOR = 4
     EVASION_THRESHOLD = 4

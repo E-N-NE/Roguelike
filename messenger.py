@@ -1,5 +1,6 @@
 from constants import Constants
 
+
 class Messenger:
 
     def __init__(self, player, mapper):
@@ -11,26 +12,29 @@ class Messenger:
     # Makes a line from a 'number' of lines.
     def split_pane(cls, number, length, *lists):
         out = []
-        for j in range(number):
-            lists[j] = cls.fill_list(length, lists[j])
+
+        for i in range(number):
+            for j in range(max(length - len(lists[i]), 0)):
+                lists[i].append('')
+
         for i in range(length):
             line = ''
             for j in range(number):
                 line += lists[j][i]+' '
-            out += [line]
+            out.append(line)
         return out
 
     @staticmethod
     # Fills list with empty lines.
     def fill_list(length, list_):
         for i in range(max(length-len(list_), 0)):
-            list_ += ['']
+            list_.append('')
         return list_
 
     @classmethod
     def stats(cls, person):
         return [
-                '{}'.format(cls.rank(person)),
+                '{}'.format(person.title),
                 'HP:{:<7}MP:{:<7}FP:{}'.format(person.hp,
                                                person.mp,
                                                person.fp),
@@ -67,9 +71,9 @@ class Messenger:
                ]
                )
 
-
     def print_everything(self):
         print_stats = self.stats(self.player)
-        printer = self.split_pane(2,self.player.ros*2+1,
+        printer = self.split_pane(2, self.player.ros*2+1,
                                   [self.mapper.map(self.player.ros),
                                    print_stats])
+        self.messenger_output(printer)

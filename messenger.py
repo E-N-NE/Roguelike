@@ -14,65 +14,26 @@ class Messenger:
         out = []
 
         for i in range(number):
-            for j in range(max(length - len(lists[i]), 0)):
+            for j in range(length - len(lists[i])):
                 lists[i].append('')
 
         for i in range(length):
             line = ''
             for j in range(number):
                 line += lists[j][i]+' '
+            line += '\n'
             out.append(line)
         return out
 
     @staticmethod
     # Fills list with empty lines.
     def fill_list(length, list_):
-        for i in range(max(length-len(list_), 0)):
+        for i in range(length-len(list_)):
             list_.append('')
         return list_
 
-    @classmethod
-    def stats(cls, person):
-        return [
-                '{}'.format(person.title),
-                'HP:{:<7}MP:{:<7}FP:{}'.format(person.hp,
-                                               person.mp,
-                                               person.fp),
-                'BP:{:<7}SP:{:<7}XP:{}'.format(person.bp,
-                                               person.sp,
-                                               person.xp),
-                'AC:{:<7}ER:{:<7}MR:{}'.format(person.ac,
-                                               person.er,
-                                               person.mr),
-                'STR:{:<6}DEX:{:<6}INT:{}'.format(person.str,
-                                                  person.dex,
-                                                  person.int),
-                'Wear:{}'.format(person.wear.name),
-                'AC:{:<7}ER:{:<7}MR:{}'.format(person.wear.ac,
-                                               person.wear.er,
-                                               person.wear.mr),
-                'Wield:{}'.format(person.wield.name),
-                'AC:{:<7}ER:{:<7}MR:{}'.format(person.wield.ac,
-                                               person.wield.er,
-                                               person.wield.mr),
-                'STR:{:<6}DEX:{:<6}INT:{}'.format(person.wield.strm,
-                                                  person.wield.dexm,
-                                                  person.wield.intm)
-               ]\
-            + ([
-               'Shield:{}'.format(person.shield.name),
-               'AC:{:<7}ER:{:<7}MR:{}'.format(person.shield.ac,
-                                              person.shield.er,
-                                              person.shield.mr)
-               ]
-               if person.dual_wield == 0 else
-               [
-               'Shield:-'
-               ]
-               )
-
     def print_everything(self):
-        print_stats = self.stats(self.player)
+        print_stats = self.player.human_readable_stats.split('\n')
         printer = self.split_pane(2, self.player.ros*2+1,
                                   [self.mapper.map(self.player.ros),
                                    print_stats])

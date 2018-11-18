@@ -35,6 +35,17 @@ class Weapon(Item):
         self.doping = doping
         super().__init__(Icons.WEAPON, name, True, location)
 
+    @property
+    def human_readable_stats(self):
+        return \
+    ("{}\n"
+     "AC:{:<7}ER:{:<7}MR:{}\n"
+     "STR:{:<6}DEX:{:<6}INT:{}\n").format(
+        self.name,
+        self.ac, self.er, self.mr,
+        self.str_multiply, self.dex_multiply, self.int_multiply
+    )
+
 
 class Armor(Item):
 
@@ -46,6 +57,15 @@ class Armor(Item):
         self.mr = mr
         self.doping = doping
         super().__init__(Icons.ARMOR, name, True, location)
+
+    @property
+    def human_readable_stats(self):
+        return \
+    ("{}\n"
+     "AC:{:<7}ER:{:<7}MR:{}\n").format(
+        self.name,
+        self.ac, self.er, self.mr
+    )
 
 
 class Food(Item):

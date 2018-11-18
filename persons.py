@@ -52,7 +52,7 @@ class Person:
     @property
     def ac(self):
         return + self.base_ac + self.wear.ac\
-               + (self.wield.ac + self.shield.ac * self.dual_wield)\
+               + (self.wield.ac + self.shield.ac*self.dual_wield)\
                * (not self.status['stun'])
 
     @property
@@ -81,6 +81,31 @@ class Person:
     @property
     def full_int(self):
         return self.int * self.wield.int_multiply
+
+    @property
+    def human_readable_stats(self):
+        return \
+    ("{}\n"
+     "HP:{}/{}\n"
+     "MP:{}/{}\n"
+     "SP:{}/{}\n"
+     "BP:{:<7}SP:{:<7}XP:{}\n"
+     "AC:{:<7}ER:{:<7}MR:{}\n"
+     "STR:{:<6}DEX:{:<6}INT:{}\n"
+     "Wear:{}\n"
+     "Wield:{}\n"
+     "Shield:{}\n").format(
+        self.title,
+        self.hp, self.vit,
+        self.mp, self.max_mp,
+        self.sp, self.vit,
+        self.bp, self.sp, self.xp,
+        self.ac, self.er, self.mr,
+        self.full_str, self.full_dex, self.full_int,
+        self.wear.human_readable_stats,
+        self.wield.human_readable_stats,
+        '-' if self.dual_wield == 1 else self.shield.human_readable_stats
+    )
 
     def heal(self, amount):
         self.hp = min(self.hp + amount, self.vit)

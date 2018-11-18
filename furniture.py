@@ -4,11 +4,15 @@ from constants import Icons
 class Furniture:
 
     def __init__(self, walkable, icon, name, x, y):
-        self.icon = icon
+        self._icon = icon
         self.walkable = walkable
         self.name = name
         self.x = x
         self.y = y
+
+    @property
+    def icon(self):
+        return self._icon
 
 
 class Wall(Furniture):

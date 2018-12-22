@@ -9,6 +9,10 @@ class Item:
         self.unique = unique
         self.location = location
 
+    @property
+    def transparency(self):
+        return True
+
 
 class Potion(Item):
 

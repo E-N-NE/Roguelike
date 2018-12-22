@@ -11,6 +11,10 @@ class Furniture:
         self.y = y
 
     @property
+    def transparency(self):
+        return self.walkable
+
+    @property
     def icon(self):
         return self._icon
 

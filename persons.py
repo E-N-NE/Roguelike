@@ -38,6 +38,10 @@ class Person:
         self.y = y
 
     @property
+    def transparency(self):
+        return True
+
+    @property
     def max_mp(self):
         return self.full_int\
                * Constants.ER_UNNOMINATOR\

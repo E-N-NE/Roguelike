@@ -77,20 +77,23 @@ class PersonInteractions:
 
     # Messages and calculations in the case en_d dodges.
     def dodge_confirms(self, en_a, en_d, damage, attack_type):
-        self.add_feed("{} dodges {}'s {}.".format(en_d.name, en_a.name,
+        self.add_feed("{} dodges {}'s {}.".format(en_d.name,
+                                                  en_a.name,
                                                   attack_type.name))
 
     # Messages and calculations in the case en_d blocks.
     def block_confirms(self, en_a, en_d, damage, attack_type):
         self.reduce(en_d, *attack_type.block_power(en_a, damage))
-        self.add_feed("{} blocks {}'s {}.".format(en_d.name, en_a.name,
+        self.add_feed("{} blocks {}'s {}.".format(en_d.name,
+                                                  en_a.name,
                                                   attack_type.name))
 
     # Messages and calculations in the case en_a grazes.
     def graze_confirms(self, en_a, en_d, damage, attack_type):
         self.reduce(en_d, *attack_type.block_power(en_a, damage))
         self.reduce(en_d, *attack_type.graze_power(en_a, damage))
-        self.add_feed("{}'s {} grazes {}.".format(en_a.name, attack_type.name,
+        self.add_feed("{}'s {} grazes {}.".format(en_a.name,
+                                                  attack_type.name,
                                                   en_d.name))
         self.special_effects(en_a, en_d, damage, attack_type)
 

@@ -1,6 +1,8 @@
 from basic_functions import d
 from items import Weapon, Armor
 
+from json import load
+
 
 class Constants:
 
@@ -41,6 +43,11 @@ class Constants:
     ER_UNNOMINATOR = 2
     STR_UNNOMINATOR = 4
     EVASION_THRESHOLD = 4
+
+    FEED_LENGTH = 30
+
+    MOBS = load(open('mobs.json'))
+    FAUNA = MOBS.keys
 
 ##############################################################################
 

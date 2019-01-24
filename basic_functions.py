@@ -9,6 +9,7 @@ def d(n):
     return randint(n > 0, max(0, n))
 
 
+# Returns False with stated probability.
 def r(a):
     return random() > a
 

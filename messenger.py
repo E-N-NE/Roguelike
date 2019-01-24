@@ -36,5 +36,6 @@ class Messenger:
         print_stats = self.player.human_readable_stats.split('\n')
         printer = self.split_pane(2, self.player.ros*2+1,
                                   [self.mapper.map(self.player.ros),
-                                   print_stats])
+                                   print_stats]) + \
+                  self.feed[:Constants.FEED_LENGTH]
         self.messenger_output(printer)

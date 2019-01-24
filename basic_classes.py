@@ -12,17 +12,18 @@ class Coordinates:
         assert increment.__class__ is Coordinates, \
             "Trying to add gibberish to coordinates.\n"\
             "Gibberish is {}.".format(increment.__class__.__name__)
-        self.x += increment.x
-        self.y += increment.y
+        return Coordinates(self.x + increment.x, self.y + increment.y)
 
     def __sub__(self, increment):
         assert increment.__class__ is Coordinates,\
             "Trying to subtract gibberish from coordinates.\n"\
             "Gibberish is {}.".format(increment.__class__.__name__)
-        self.x -= increment.x
-        self.y -= increment.y
+        return Coordinates(self.x - increment.x, self.y - increment.y)
 
     def __eq__(self, other):
+        assert other.__class__ is Coordinates, \
+            "Trying to compare gibberish with coordinates.\n" \
+            "Gibberish is {}.".format(other.__class__.__name__)
         return self.x == other.x and self.y == other.y
 
     def copy(self):

@@ -8,7 +8,7 @@ class PersonInteractions:
         self.messenger = messenger
 
     @staticmethod
-    def evasion_damage(en_a, en_d, attack_type):
+    def evasion_and_damage(en_a, en_d, attack_type):
         evasion = attack_type.dodge_power(en_d) * (not en_d.status['stun']) \
                   - attack_type.accuracy_power(en_a)
         damage = (
@@ -20,7 +20,7 @@ class PersonInteractions:
 
     # What happens when en_a attacks en_d.
     def attack(self, en_a, en_d, attack_type):
-        evasion, damage = self.evasion_damage(en_a, en_d, attack_type)
+        evasion, damage = self.evasion_and_damage(en_a, en_d, attack_type)
         if evasion >= Constants.EVASION_THRESHOLD:
             self.dodge_confirms(en_a, en_d, damage, attack_type)
         elif damage <= 0:
@@ -39,7 +39,7 @@ class PersonInteractions:
             return word+'s'
 
     @staticmethod
-    # Decreases a specific value of en_d.
+    # Decreases a specific value of an Entity.
     def reduce(en_d, amount, flavour):
         if flavour == 'hp':
             en_d.hp -= amount
@@ -63,12 +63,12 @@ class PersonInteractions:
         if 'vampirism' in en_a.doping:
             en_a.heal(damage)
             self.add_feed("{} drains {}.".format(en_a.name, en_d.name))
-            if attack_type.name == 'bite' and 'kai' not in en_d.doping:
-                en_d.base_doping += ['kai', 'vampirism']
+            if attack_type.name == 'bite' and 'apparition' not in en_d.doping:
+                en_d.base_doping += ['apparition', 'vampirism']
         if en_a.status['viper']:
             en_d.status['poison'] += d(en_a.status['viper']+en_a.dex-en_d.dex)
             self.add_feed("{} poisons {}.".format(en_a.name, en_d.name))
-        if 'kai' in en_d.doping and 'purify' in en_a.doping:
+        if 'apparition' in en_d.doping and 'purify' in en_a.doping:
             en_d.hp = -45
             self.add_feed("{} purifies {}.".format(en_a.name, en_d.name))
         if 'death' in en_a.doping:

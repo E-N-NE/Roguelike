@@ -95,6 +95,7 @@ public class MapHandler
   public RuleSet MapRuleSet  { get; set; }
   public List<int> MapClocky  { get; set; }
   public bool[,] PlayZone  { get; set; }
+  public
 
   public MapHandler(int mw, int mh, int paw, int mpz, RuleSet rs)
   {
@@ -113,6 +114,8 @@ public class MapHandler
       Border();
       FillOutFromRandom();
     } while(CalculatePlayZone() < this.MinimalPlayZone);
+    MakeAllStairs();
+    MakeAllEnemies();
     PrintMap();
   }
 
@@ -245,7 +248,7 @@ public class MapHandler
   {
     string returnString = "";
 
-    char[] mapSymbols = new char[4]{'.','#','~','8'};
+    char[] mapSymbols = new char[6]{'.','#','~','8'};
 
     for(int column = 0, row = 0; row < MapHeight; row++ )
     {

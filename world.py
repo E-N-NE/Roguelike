@@ -2,6 +2,7 @@
 from basic_functions import multidimensional_list
 from constants import Icons, Constants
 from furniture import Wall, Stairs, Door, Water
+from persons import Mob
 
 from subprocess import Popen, PIPE, STDOUT
 
@@ -129,11 +130,13 @@ class World:
                 for x in range(self.width):
                     if line[x] == Icons.NOTHING:
                         pass
-                    elif line[x] == Icons.WALL:
+                    elif line[x] in Constants.FAUNA:
+                        self.append_mob(Mob(*Constants.MOBS(line[x]), x, y))
+                    elif line[x] is Icons.WALL:
                         self.append_furniture(Wall('Wall', x, y))
-                    elif line[x] == Icons.DOOR_CLOSED:
+                    elif line[x] is Icons.DOOR_CLOSED:
                         self.append_furniture(Door('Door', x, y))
-                    elif line[x] == Icons.WATER:
+                    elif line[x] is Icons.WATER:
                         self.append_furniture(Water('Water', x, y))
 
         def append_mob(self, mob):
@@ -147,3 +150,10 @@ class World:
         def append_item(self, item):
             self.item_list.list[item.x//self.partition_width]\
                                [item.y//self.partition_height].append(item)
+
+        def mob_is_at(self, x, y):
+            for mob in self.mob_list.list[x//self.partition_width]\
+                                         [y//self.partition_height]:
+                if mob.x == x and mob.y == y:
+                    return True
+            return False

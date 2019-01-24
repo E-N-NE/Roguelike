@@ -3,7 +3,7 @@ from constants import Icons
 
 class Furniture:
 
-    def __init__(self, walkable, icon, name, x, y):
+    def __init__(self, icon, walkable, name, x, y):
         self._icon = icon
         self.walkable = walkable
         self.name = name

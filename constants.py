@@ -46,8 +46,9 @@ class Constants:
 
     FEED_LENGTH = 30
 
-    MOBS = load(open('mobs.json'))
-    FAUNA = MOBS.keys
+    FILE = load(open('mobs.json'))
+    FAUNA = FILE['fauna']
+    MOBS = FILE['mobs']
 
 ##############################################################################
 

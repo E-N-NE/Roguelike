@@ -20,6 +20,12 @@ class Coordinates:
             "Gibberish is {}.".format(increment.__class__.__name__)
         return Coordinates(self.x - increment.x, self.y - increment.y)
 
+    def __mul__(self, number):
+        assert number.__class__ is int, \
+            "Trying to multiply by gibberish coordinates.\n" \
+            "Gibberish is {}.".format(number.__class__.__name__)
+        return Coordinates(self.x * number, self.y * number)
+
     def __eq__(self, other):
         assert other.__class__ is Coordinates, \
             "Trying to compare gibberish with coordinates.\n" \

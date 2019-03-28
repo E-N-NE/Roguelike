@@ -1,3 +1,21 @@
-{
-  "g" : ["g", "Goblin", 10, 8, 8, 8, 8, 8, 8, 4, 4, 4, []]
-}
+[
+    {
+    "Name" : "Goblin",
+    "Icon" : "g",
+    "Danger" : 3,
+    "InnerStats" :
+        {
+            "HP" : 10,
+            "STR" : 8,
+            "DEX" : 8,
+            "INT" : 8,
+            "Sight" : 8,
+            "Hear" : 8,
+            "Shout" : 8,
+            "AC" : 4,
+            "ER" : 4,
+            "MR" : 4,
+            "Doping" : []
+        }
+    },
+]
